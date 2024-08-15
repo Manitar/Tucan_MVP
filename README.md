@@ -7,6 +7,7 @@ This project is for the Tucan Tournament assignment.
 ```index.js```
 
 This project was created with the ability to be expanded on in mind, so in case more types of games are added, and more files are added, the changes needed are minimal.
+
 Read data reads every single CSV file in the directory it is in, so more games of type BASKETBALL/HANDBALL can be added.
 
 I assumed that for every game that'll be added, the following format will be of the following:
