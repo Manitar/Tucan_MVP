@@ -31,7 +31,7 @@ Add new field and corresponding values to RATING_CALCULATION
 **index.js**
 
 ```
-validateNumberFieldsAreCorrect -> Add new "if" block that checks number of fields for the new game type
+validateNumberFieldsAreCorrect -> Add another key and value of the specific new game type to requiredFieldIndexes
 calculatePlayerRating -> Add new "if" block that calculates the new player rating, according to the game rules
 ```
 
