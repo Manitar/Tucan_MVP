@@ -35,4 +35,6 @@ validateNumberFieldsAreCorrect -> Add new "if" block that checks number of field
 calculatePlayerRating -> Add new "if" block that calculates the new player rating, according to the game rules
 ```
 
+**VERSIONS**:
 
+```node v18.16.0```
