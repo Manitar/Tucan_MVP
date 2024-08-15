@@ -4,7 +4,7 @@ This project is for the Tucan Tournament assignment.
 
 **In order to run this project, open the terminal in the root folder (where index.js is located) and type in:**
 
-```index.js```
+```node index.js```
 
 This project was created with the ability to be expanded on in mind, so in case more types of games are added, and more files are added, the changes needed are minimal.
 
