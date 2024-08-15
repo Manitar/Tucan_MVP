@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 // Import all relevant consts from the consts file
 const consts = require('./consts')
@@ -67,7 +68,6 @@ function allocateScoresToPlayers(gameTitle, gameData) {
         playerRating += 10
       }
     } else if (gameTitle === GAME_TITLES.HANDBALL) {
-      const playerTeam = playerData[3]
       const goalsMade = playerData[4]
       const goalsReceived = playerData[5]
       playerRating = ratingCalculation['initial'] + ratingCalculation['goal_made'] * goalsMade + ratingCalculation['goal_received'] * goalsReceived
@@ -103,10 +103,21 @@ function allocateScoresToPlayers(gameTitle, gameData) {
 
 function readData() {
 
-  const basketballData = fs.readFileSync('Basketball.csv', 'utf8')
-  const handballData = fs.readFileSync('Handball.csv', 'utf8')
+  // const basketballData = fs.readFileSync('Basketball.csv', 'utf8')
+  // const handballData = fs.readFileSync('Handball.csv', 'utf8')
 
-  return [basketballData, handballData]
+  // return [basketballData, handballData]
+  const currentDirectory = __dirname;
+  const files = fs.readdirSync(currentDirectory);
+  const csvFiles = files.filter(file => path.extname(file) === '.csv');
+
+  const dataArray = csvFiles.map(file => {
+    const filePath = path.join(currentDirectory, file);
+    const data = fs.readFileSync(filePath, 'utf8');
+    return data;
+  });
+
+  return dataArray;
 }
 
 function parseData(data) {
@@ -132,6 +143,9 @@ function validateData(data) {
   try {
     const dataLines = data.split('\n') // We divide the data into arrays of each player
     let gameTitle = dataLines[0].replace(/\r/g, '')
+    if (!(gameTitle in GAME_TITLES)) {
+      return false;
+    }
     let playerCount = {
       'Team_A': 0,
       'Team_B': 0
