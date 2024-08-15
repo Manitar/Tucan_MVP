@@ -23,13 +23,13 @@ function main() {
     allocateScoresToPlayers(gameTitle, data)
   }
 
-  const winningPlayer = calculateWinningPlayer()
+  const winningPlayer = getWinningPlayer()
   console.log("Here are the ratings of each player in the tournament:")
   console.log(PLAYER_RATINGS)
   console.log(`The winner of the tournament is ${winningPlayer.playerName}, with a rating of ${winningPlayer.rating}!`);
 }
 
-function calculateWinningPlayer() {
+function getWinningPlayer() {
   let maxKey = '';
   let maxValue = -Infinity;
 
@@ -90,8 +90,8 @@ function allocateScoresToPlayers(gameTitle, gameData) {
 
   function calculateAllPlayerRatings() {
     for (const playerData of gameData) {
-      let playerRating = calculatePlayerRating(playerData)
-      let playerName = playerData[1]
+      const playerRating = calculatePlayerRating(playerData)
+      const playerName = playerData[1]
       PLAYER_RATINGS[playerName] += playerRating
     }
   }
