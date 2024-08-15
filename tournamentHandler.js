@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 
 // Import all relevant consts from the consts file
 const consts = require('./consts')
@@ -33,11 +34,6 @@ exports.getPlayerRatings = function getPlayerRatings() {
 // Goes over all relevant games and allocates the ratings to each player
 exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameTitle, gameData) {
 
-  const teamScores = {
-    'Team_A': 0,
-    'Team_B': 0
-  }
-
   const ratingCalculation = RATING_CALCULATION[gameTitle]
 
   function isPlayerOnWinningTeam(team) {
@@ -46,24 +42,28 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameTitle, ga
 
   function calculatePlayerRating(playerData) {
     let playerRating = 0;
+    const playerTeam = playerData[3]
     if (gameTitle === GAME_TITLES.BASKETBALL) {
-      const playerTeam = playerData[3]
       const scores = playerData[4]
       const rebounds = playerData[5]
       const assists = playerData[6]
       playerRating = ratingCalculation['score'] * scores + ratingCalculation['rebound'] * rebounds + ratingCalculation['assist'] * assists
-      if (isPlayerOnWinningTeam(playerTeam)) {
-        playerRating += 10
-      }
     } else if (gameTitle === GAME_TITLES.HANDBALL) {
       const goalsMade = playerData[4]
       const goalsReceived = playerData[5]
       playerRating = ratingCalculation['initial'] + ratingCalculation['goal_made'] * goalsMade + ratingCalculation['goal_received'] * goalsReceived
     }
+    if (isPlayerOnWinningTeam(playerTeam)) {
+      playerRating += 10
+    }
     return playerRating
   }
 
-  function calculateWinningTeam() {
+  function calculateTeamScores() {
+    const teamScores = {
+      'Team_A': 0,
+      'Team_B': 0
+    }
     for (const playerData of gameData) {
       const playerName = playerData[1]
       // Insert player into ratings map
@@ -74,6 +74,7 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameTitle, ga
       const score = playerData[4]
       teamScores[playerTeam] += score
     }
+    return teamScores
   }
 
   function calculateAllPlayerRatings() {
@@ -84,27 +85,41 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameTitle, ga
     }
   }
 
-  calculateWinningTeam()
+  const teamScores = calculateTeamScores()
   if (teamScores['Team_A'] === teamScores['Team_B']) {
     console.error("Team scores are equal, game not calculated in MVP calculation.")
     return
   }
   calculateAllPlayerRatings()
 
+  return PLAYER_RATINGS
+
 }
 
 // Reads the data from CSV files
-exports.readData = function readData() {
-
+exports.readData = async function readData() {
   const currentDirectory = __dirname;
   const files = fs.readdirSync(currentDirectory);
   const csvFiles = files.filter(file => path.extname(file) === '.csv');
 
-  const dataArray = csvFiles.map(file => {
+  const dataArray = [];
+
+  for (const file of csvFiles) {
     const filePath = path.join(currentDirectory, file);
-    const data = fs.readFileSync(filePath, 'utf8');
-    return data;
-  });
+    const fileData = [];
+
+    const rl = readline.createInterface({
+      input: fs.createReadStream(filePath),
+      crlfDelay: Infinity
+    });
+
+    for await (const line of rl) {
+      fileData.push(line.split(';'));
+    }
+
+    rl.close();
+    dataArray.push(fileData);
+  }
 
   return dataArray;
 }
@@ -187,7 +202,6 @@ function validateNumberFieldsAreCorrect(gameTitle, fields) {
   };
 
   if (!requiredFieldIndexes.hasOwnProperty(gameTitle)) {
-    // Handle unexpected game title
     console.error(`Unknown game title: ${gameTitle}`);
     return false;
   }
