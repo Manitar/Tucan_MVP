@@ -3,6 +3,7 @@
 This project is for the Tucan Tournament assignment.
 
 **In order to run this project, open the terminal in the root folder (where index.js is located) and type in:**
+
 ```index.js```
 
 This project was created with the ability to be expanded on in mind, so in case more types of games are added, and more files are added, the changes needed are minimal.
@@ -16,14 +17,17 @@ Where ... are specific stats to the specific game.
 ```
 
 **In order to add more games:**
-consts.js
+
+**consts.js**
+
 ```
 Add new field to CORRECT_NUMBER_OF_FIELDS
 Add new field to GAME_TITLES
 Add new field and corresponding values to RATING_CALCULATION
 ```
 
-index.js
+**index.js**
+
 ```
 validateNumberFieldsAreCorrect -> Add new "if" block that checks number of fields for the new game type
 calculatePlayerRating -> Add new "if" block that calculates the new player rating, according to the game rules
