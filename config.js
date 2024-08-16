@@ -1,29 +1,5 @@
-exports.CORRECT_NUMBER_OF_FIELDS = {
-  'BASKETBALL': 7,
-  'HANDBALL': 6
-}
-
-exports.GAME_TITLES = {
-  'BASKETBALL': 'BASKETBALL',
-  'HANDBALL': 'HANDBALL'
-}
-
-exports.RATING_CALCULATION = {
-  'BASKETBALL': {
-    'score': 2,
-    'rebound': 3,
-    'assist': 1,
-  },
-  'HANDBALL': {
-    'initial': 20,
-    'goal_made': 2,
-    'goal_received': -1
-  }
-}
-
 exports.GAME_CONFIGURATIONS = {
   'BASKETBALL': {
-    title: 'BASKETBALL',
     ratingCalculation: {
       'score': 2,
       'rebound': 3,
@@ -39,8 +15,8 @@ exports.GAME_CONFIGURATIONS = {
       assist: 6
     },
     numberedFields: [2, 4, 5, 6],
-    handleCalculatePlayerRating: function(playerData){
-      return playerData.score * this.ratingCalculation.score + playerData.rebound * this.ratingCalculation.rebound + playerData.assist * this.ratingCalculation.assist
+    handleCalculatePlayerRating: function(player){
+      return player.score * this.ratingCalculation.score + player.rebound * this.ratingCalculation.rebound + player.assist * this.ratingCalculation.assist
     },
     handleIncrementTeamScore: function(player){
       return player.score
@@ -48,7 +24,6 @@ exports.GAME_CONFIGURATIONS = {
 
   },
   'HANDBALL': {
-    title: 'HANDBALL',
     ratingCalculation: {
       'initial': 20,
       'goal_made': 2,
@@ -63,8 +38,8 @@ exports.GAME_CONFIGURATIONS = {
       goal_received: 5,
     },
     numberedFields: [2, 4, 5],
-    handleCalculatePlayerRating: function(playerData){
-      return this.ratingCalculation.initial + playerData.goal_made * this.ratingCalculation.goal_made + playerData.goal_received * this.ratingCalculation.goal_received
+    handleCalculatePlayerRating: function(player){
+      return this.ratingCalculation.initial + player.goal_made * this.ratingCalculation.goal_made + player.goal_received * this.ratingCalculation.goal_received
     },
     handleIncrementTeamScore: function(player){
       return player.goal_made
