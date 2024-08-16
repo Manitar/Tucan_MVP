@@ -20,20 +20,43 @@ Where ... are specific stats to the specific game.
 
 **In order to add more games:**
 
-**consts.js**
+**config.js**
+
+Add new game to the GAME_CONFIGURATIONS, here is an example:
 
 ```
-Add new field to CORRECT_NUMBER_OF_FIELDS
-Add new field to GAME_TITLES
-Add new field and corresponding values to RATING_CALCULATION
+  'HANDBALL': {
+    ratingCalculation: {
+      'initial': 20,
+      'goal_made': 2,
+      'goal_received': -1,
+    },
+    fields: {
+      playerId: 0,
+      playerName: 1,
+      playerNumber: 2,
+      playerTeam: 3,
+      goal_made: 4,
+      goal_received: 5,
+    },
+    numberedFields: [2, 4, 5],
+    handleCalculatePlayerRating: function(player){
+      return player.score * this.ratingCalculation.score + player.rebound * this.ratingCalculation.rebound + player.assist * this.ratingCalculation.assist
+    },
+    handleIncrementTeamScore: function(player){
+      return player.goal_made
+    }
+  },
 ```
 
-**index.js**
+Change the corresponding fields according to the game type:
+'HANDBALL' -> new game name
+ratingCalculation -> To fit the new game
+fields -> According to the format the CSV lines appear in
+numberedFields -> All fields that are supposed to be numbers
+handleCalculatePlayerRating -> Handler that calculates player score
+handleIncrementTeamScore -> Handler that returns how much the score increments by according to the player score
 
-```
-validateNumberFieldsAreCorrect -> Add another key and value of the specific new game type to requiredFieldIndexes
-calculatePlayerRating -> Add new "if" block that calculates the new player rating, according to the game rules
-```
 
 **VERSIONS**:
 
