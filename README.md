@@ -50,11 +50,17 @@ Add new game to the GAME_CONFIGURATIONS, here is an example:
 ```
 
 Change the corresponding fields according to the game type:
+
 'HANDBALL' -> new game name
+
 ratingCalculation -> To fit the new game
+
 fields -> According to the format the CSV lines appear in
+
 numberedFields -> All fields that are supposed to be numbers
+
 handleCalculatePlayerRating -> Handler that calculates player score
+
 handleIncrementTeamScore -> Handler that returns how much the score increments by according to the player score
 
 
