@@ -39,16 +39,20 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLA
     const teamScores = {
     }
     const { playersData } = gameData;
+    
     for (const playerName in playersData) {
       const player = playersData[playerName];
+
       // Insert player into ratings map
       if (!(playerName in PLAYER_RATINGS)) {
         PLAYER_RATINGS[playerName] = 0;
       }
+
       // Insert team into teamScores map
       if(!(player.playerTeam in teamScores)){
         teamScores[player.playerTeam] = 0
       }
+
       teamScores[player.playerTeam] += GAME_CONFIGURATIONS[gameTitle].handleIncrementTeamScore(player)
     }
     return teamScores
@@ -61,7 +65,7 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLA
       const player = playersData[playerName];
       const playerRating = GAME_CONFIGURATIONS[gameTitle].handleCalculatePlayerRating(player);
       if(isPlayerOnWinningTeam(player.playerTeam, teamScores)){
-        playersRatings[playerName] += GAME_CONFIGURATIONS.generalRatingCalculation['team_win'];
+        playersRatings[playerName] += GAME_CONFIGURATIONS.generalRatingCalculation.team_win;
       }
       playersRatings[playerName] += playerRating;
     }
