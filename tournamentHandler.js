@@ -3,15 +3,15 @@ const path = require('path');
 const readline = require('readline');
 
 // Import all relevant consts from the consts file
-const consts = require('./consts')
-const GAME_CONFIGURATIONS = consts.GAME_CONFIGURATIONS;
+const config = require('./config')
+const GAME_CONFIGURATIONS = config.GAME_CONFIGURATIONS;
 
 // // Returns the player with the highest rating
 exports.getWinningPlayer = function getWinningPlayer(playersRatings) {
   let maxKey = '';
   let maxValue = -Infinity;
 
-  for (const [key, value] of Object.entries(PLAYER_RATINGS)) {
+  for (const [key, value] of Object.entries(playersRatings)) {
     if (value > maxValue) {
       maxKey = key;
       maxValue = value;
