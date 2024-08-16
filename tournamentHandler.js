@@ -31,8 +31,13 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLA
   const gameTitle = gameData.gameTitle
 
   function isPlayerOnWinningTeam(team, teamScores) {
-    const otherTeamScore = Object.values(teamScores).reduce((max, score) => Math.max(max, score), 0);
-    return teamScores[team] > otherTeamScore;
+    const otherTeamScores = Object.entries(teamScores)
+    .filter(([otherTeam, score]) =>  otherTeam !== team)
+    .map(([otherTeam, score]) => score)
+
+    const highestOtherTeamScore = otherTeamScores.reduce((max, score) => Math.max(score, 0), 0)
+    
+    return teamScores[team] > highestOtherTeamScore;
   }
 
   function calculateTeamScores() {
