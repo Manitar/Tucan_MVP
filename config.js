@@ -18,16 +18,16 @@ exports.GAME_CONFIGURATIONS = {
   'HANDBALL': {
     ratingCalculation: {
       'initial': 20,
-      'goal_made': 2,
-      'goal_received': -1,
+      'goalMade': 2,
+      'goalReceived': -1,
     },
-    fields: ['playerId', 'playerName', 'playerNumber', 'playerTeam', 'goals_made', 'goals_received'],
-    numberedFields: ['playerNumber', 'goals_made', 'goals_received'],
+    fields: ['playerId', 'playerName', 'playerNumber', 'playerTeam', 'goalsMade', 'goalsReceived'],
+    numberedFields: ['playerNumber', 'goalsMade', 'goalsReceived'],
     handleCalculatePlayerRating: function (player) {
-      return this.ratingCalculation.initial + player.goals_made * this.ratingCalculation.goal_made + player.goals_received * this.ratingCalculation.goal_received
+      return this.ratingCalculation.initial + player.goalsMade * this.ratingCalculation.goalMade + player.goalsReceived * this.ratingCalculation.goalReceived
     },
     handleIncrementTeamScore: function (player) {
-      return player.goals_made
+      return player.goalsMade
     }
   },
   generalRatingCalculation: {
