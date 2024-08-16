@@ -25,34 +25,28 @@ Where ... are specific stats to the specific game.
 Add new game to the GAME_CONFIGURATIONS, here is an example:
 
 ```
-  'HANDBALL': {
+  'BASKETBALL': {
     ratingCalculation: {
-      'initial': 20,
-      'goal_made': 2,
-      'goal_received': -1,
+      'score': 2,
+      'rebound': 3,
+      'assist': 1
     },
-    fields: {
-      playerId: 0,
-      playerName: 1,
-      playerNumber: 2,
-      playerTeam: 3,
-      goal_made: 4,
-      goal_received: 5,
-    },
-    numberedFields: [2, 4, 5],
+    fields: ['playerId', 'playerName', 'playerNumber', 'playerTeam', 'score', 'rebound', 'assist'],
+    numberedFields: ['playerNumber', 'score', 'rebound', 'assist'],
     handleCalculatePlayerRating: function(player){
       return player.score * this.ratingCalculation.score + player.rebound * this.ratingCalculation.rebound + player.assist * this.ratingCalculation.assist
     },
     handleIncrementTeamScore: function(player){
-      return player.goal_made
+      return player.score
     }
+
   },
 ```
 
 Change the corresponding fields according to the game type:
 
 ```
-'HANDBALL' -> new game name
+'BASKETBALL' -> new game name
 
 ratingCalculation -> To fit the new game
 
@@ -62,7 +56,7 @@ numberedFields -> All fields that are supposed to be numbers
 
 handleCalculatePlayerRating -> Handler that calculates player score
 
-handleIncrementTeamScore -> Handler that returns how much the score increments by according to the player score
+handleIncrementTeamScore -> Handler that returns how much the team score increments by according to the player score
 ```
 
 **VERSIONS**:
