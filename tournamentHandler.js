@@ -28,7 +28,6 @@ exports.getWinningPlayer = function getWinningPlayer(playersRatings) {
 
 // Goes over all relevant games and allocates the ratings to each player
 exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLAYER_RATINGS) {
-  console.log(gameData)
   const gameTitle = gameData.gameTitle
 
   function isPlayerOnWinningTeam(team, teamScores) {
@@ -50,7 +49,6 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLA
       if(!(player.playerTeam in teamScores)){
         teamScores[player.playerTeam] = 0
       }
-      console.log(teamScores)
       teamScores[player.playerTeam] += GAME_CONFIGURATIONS[gameTitle].handleIncrementTeamScore(player)
     }
     return teamScores
@@ -71,7 +69,6 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLA
   }
 
   const teamScores = calculateTeamScores()
-  console.log(teamScores)
   playersRatings = calculateAllPlayerRatings(teamScores, PLAYER_RATINGS)
 
   return playersRatings
@@ -142,10 +139,9 @@ function transformData(data) {
 }
 
 
-// We need 11 elements in array: 0 should be title name, 1-10 should be of players
-// Each player line should have 6 elements if is handball, 7 elements if is basketball
-// For basketball: elements 2, 4, 5, 6 should be numbers. Elements 0, 1 should be string, element 3 should be team.
-// For handball: elements 2, 4, 5 should be numbers. Elements 0, 1 should be string, element 3 should be team.
+// Elements in the data array: Element 0 should be array with 1 element: game title, 1 and higher should be arrays of player data
+// Each player line will have player_id, playerName, playerNumber, playerTeam, and additional data according to the game.
+// The numbered fields must be 0 or higher (A player can't score -5 goals, for example)
 // Player names are unique
 function validateData(data) {
   try {
@@ -165,7 +161,6 @@ function validateData(data) {
         console.error("File incorrect, wrong number of fields");
         return false;
       }
-
       if (!validateNumberFieldsAreCorrect(gameTitle, fields)) {
         console.error("Corrupt file, number fields are incorrect")
         return false
@@ -186,7 +181,7 @@ function validateData(data) {
 
 // Validates the numbered fields in the data
 function validateNumberFieldsAreCorrect(gameTitle, fields) {
-
   const requiredFieldIndexes = GAME_CONFIGURATIONS[gameTitle].numberedFields
-  return requiredFieldIndexes.every(index => !isNaN(parseInt(fields[index])));
+  return requiredFieldIndexes.every(index => /^\d+$/.test(fields[index])
+  );
 }
