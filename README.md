@@ -59,6 +59,46 @@ handleCalculatePlayerRating -> Handler that calculates player score
 handleIncrementTeamScore -> Handler that returns how much the team score increments by according to the player score
 ```
 
+**EXAMPLE OF GAME ADDED**
+
+Added the following to GAME_CONFIGURATIONS:
+
+```
+  'FOOTBALL': {
+    ratingCalculation: {
+      'initial': 10,
+      'goal_made': 2,
+      'foul': -1
+    },
+    fields: ['playerId', 'playerName', 'playerNumber', 'playerTeam', 'goal_made', 'foul'],
+    numberedFields: ['playerNumber', 'goal_made', 'foul'],
+    handleCalculatePlayerRating: function(player){
+      return this.ratingCalculation.initial + player.goal_made * this.ratingCalculation.goal_made + player.foul * this.ratingCalculation.foul
+    },
+    handleIncrementTeamScore: function(player){
+      return player.goal_made
+    }
+  },
+```
+
+Then created a new Football.csv file, like so:
+
+```
+FOOTBALL
+player_1;Shakill;4;Team_A;1;32
+player_2;Labron;8;Team_A;10;32
+player_3;Martin;15;Team_A;15;32
+player_4;Robert;16;Team_A;20;32
+player_5;Peter;23;Team_A;4;32
+player_6;Parker;42;Team_B;5;50
+player_7;Steve;13;Team_B;10;50
+player_8;Rogers;17;Team_B;10;50
+player_9;Tony;22;Team_B;0;50
+player_10;Stark;11;Team_B;7;50
+```
+
+And the new ratings were calculated correctly.
+
 **VERSIONS**:
 
 ```node v18.16.0```
