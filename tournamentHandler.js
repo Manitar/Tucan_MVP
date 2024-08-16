@@ -7,7 +7,7 @@ const config = require('./config')
 const GAME_CONFIGURATIONS = config.GAME_CONFIGURATIONS;
 
 // // Returns the player with the highest rating
-exports.getWinningPlayer = function getWinningPlayer(playersRatings) {
+exports.getMVP = function getMVP(playersRatings) {
   let maxKey = '';
   let maxValue = -Infinity;
 
@@ -27,11 +27,11 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(PLAYER_RATING
 
   function isPlayerOnWinningTeam(team, teamScores) {
     const otherTeamScores = Object.entries(teamScores)
-    .filter(([otherTeam, score]) =>  otherTeam !== team)
-    .map(([otherTeam, score]) => score)
+      .filter(([otherTeam, score]) => otherTeam !== team)
+      .map(([otherTeam, score]) => score)
 
     const highestOtherTeamScore = otherTeamScores.reduce((max, score) => Math.max(score, 0), 0)
-    
+
     return teamScores[team] > highestOtherTeamScore;
   }
 
@@ -39,7 +39,7 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(PLAYER_RATING
     const teamScores = {
     }
     const { playersData } = gameData;
-    
+
     for (const playerName in playersData) {
       const player = playersData[playerName];
 
@@ -49,7 +49,7 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(PLAYER_RATING
       }
 
       // Insert team into teamScores map
-      if(!(player.playerTeam in teamScores)){
+      if (!(player.playerTeam in teamScores)) {
         teamScores[player.playerTeam] = 0
       }
 
@@ -60,18 +60,18 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(PLAYER_RATING
 
   function calculateAllPlayerRatings(teamScores, playersRatings) {
     const { playersData } = gameData;
-  
+
     for (const playerName in playersData) {
       const player = playersData[playerName];
       let playerRating = GAME_CONFIGURATIONS[gameTitle].handleCalculatePlayerRating(player);
-      if(isPlayerOnWinningTeam(player.playerTeam, teamScores)){
+      if (isPlayerOnWinningTeam(player.playerTeam, teamScores)) {
         playerRating += GAME_CONFIGURATIONS.generalRatingCalculation.team_win;
       }
       playersRatings[playerName] += playerRating;
     }
     return playersRatings
   }
-  
+
   const teamScores = calculateTeamScores()
   playersRatings = calculateAllPlayerRatings(teamScores, PLAYER_RATINGS)
 
@@ -86,7 +86,7 @@ exports.readData = async function readData() {
   const csvFiles = files.filter(file => path.extname(file) === '.csv');
 
   const dataArray = [];
-  
+
   for (const file of csvFiles) {
     const filePath = path.join(currentDirectory, file);
     const fileData = [];
@@ -123,10 +123,10 @@ function transformData(data) {
 
   let playersData = {}
 
-  for(let i = 1; i < data.length; i++){
+  for (let i = 1; i < data.length; i++) {
     let unparsedPlayerData = data[i]
     let keyVals = unparsedPlayerData.map((val, index) => {
-      if(numberedFields.includes(fields[index])){
+      if (numberedFields.includes(fields[index])) {
         val = parseInt(val)
       }
       return [fields[index], val]
@@ -160,7 +160,7 @@ function validateData(data) {
     for (let i = 1; i < data.length; i++) {
       const playerFields = data[i]
       const playerName = playerFields[1]
-      
+
       if (playerFields.length !== GAME_CONFIGURATIONS[gameTitle].fields.length) {
         console.error("File incorrect, wrong number of fields");
         return false;
