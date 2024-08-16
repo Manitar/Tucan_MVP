@@ -21,11 +21,6 @@ exports.getWinningPlayer = function getWinningPlayer(playersRatings) {
   return { playerName: maxKey, rating: maxValue }
 }
 
-// // Returns the table of the player ratings
-// exports.getPlayerRatings = function getPlayerRatings() {
-//   return PLAYER_RATINGS
-// }
-
 // Goes over all relevant games and allocates the ratings to each player
 exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLAYER_RATINGS) {
   const gameTitle = gameData.gameTitle
@@ -156,6 +151,7 @@ function validateData(data) {
   try {
     let gameTitle = data[0][0]
     if (!(gameTitle in GAME_CONFIGURATIONS)) {
+      console.error(`Game ${gameTitle} does not exist in the Tucan Tournament`)
       return false;
     }
 
