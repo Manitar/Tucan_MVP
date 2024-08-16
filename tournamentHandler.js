@@ -86,7 +86,7 @@ exports.readData = async function readData() {
   const csvFiles = files.filter(file => path.extname(file) === '.csv');
 
   const dataArray = [];
-
+  
   for (const file of csvFiles) {
     const filePath = path.join(currentDirectory, file);
     const fileData = [];
@@ -121,20 +121,17 @@ function transformData(data) {
   const fields = GAME_CONFIGURATIONS[gameTitle].fields
   const numberedFields = GAME_CONFIGURATIONS[gameTitle].numberedFields
 
-  let unparsedPlayerData
   let playersData = {}
-  let keyVals
-  let playerData
 
   for(let i = 1; i < data.length; i++){
-    unparsedPlayerData = data[i]
-    keyVals = unparsedPlayerData.map((val, index) => {
+    let unparsedPlayerData = data[i]
+    let keyVals = unparsedPlayerData.map((val, index) => {
       if(numberedFields.includes(fields[index])){
         val = parseInt(val)
       }
       return [fields[index], val]
     })
-    playerData = keyVals.reduce((acc, [key, val]) => {
+    let playerData = keyVals.reduce((acc, [key, val]) => {
       acc[key] = val
       return acc
     }, {})
