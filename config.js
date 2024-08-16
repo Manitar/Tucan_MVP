@@ -5,16 +5,8 @@ exports.GAME_CONFIGURATIONS = {
       'rebound': 3,
       'assist': 1
     },
-    fields: {
-      playerId: 0,
-      playerName: 1,
-      playerNumber: 2,
-      playerTeam: 3,
-      score: 4,
-      rebound: 5,
-      assist: 6
-    },
-    numberedFields: [2, 4, 5, 6],
+    fields: ['playerId', 'playerName', 'playerNumber', 'playerTeam', 'score', 'rebound', 'assist'],
+    numberedFields: ['playerNumber', 'score', 'rebound', 'assist'],
     handleCalculatePlayerRating: function(player){
       return player.score * this.ratingCalculation.score + player.rebound * this.ratingCalculation.rebound + player.assist * this.ratingCalculation.assist
     },
@@ -29,15 +21,8 @@ exports.GAME_CONFIGURATIONS = {
       'goal_made': 2,
       'goal_received': -1,
     },
-    fields: {
-      playerId: 0,
-      playerName: 1,
-      playerNumber: 2,
-      playerTeam: 3,
-      goal_made: 4,
-      goal_received: 5,
-    },
-    numberedFields: [2, 4, 5],
+    fields: ['playerId', 'playerName', 'playerNumber', 'playerTeam', 'goal_made', 'goal_received'],
+    numberedFields: ['playerNumber', 'goal_made', 'goal_received'],
     handleCalculatePlayerRating: function(player){
       return this.ratingCalculation.initial + player.goal_made * this.ratingCalculation.goal_made + player.goal_received * this.ratingCalculation.goal_received
     },

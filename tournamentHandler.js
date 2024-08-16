@@ -22,7 +22,7 @@ exports.getWinningPlayer = function getWinningPlayer(playersRatings) {
 }
 
 // Goes over all relevant games and allocates the ratings to each player
-exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLAYER_RATINGS) {
+exports.allocateScoresToPlayers = function allocateScoresToPlayers(PLAYER_RATINGS, gameData) {
   const gameTitle = gameData.gameTitle
 
   function isPlayerOnWinningTeam(team, teamScores) {
@@ -63,15 +63,15 @@ exports.allocateScoresToPlayers = function allocateScoresToPlayers(gameData, PLA
   
     for (const playerName in playersData) {
       const player = playersData[playerName];
-      const playerRating = GAME_CONFIGURATIONS[gameTitle].handleCalculatePlayerRating(player);
+      let playerRating = GAME_CONFIGURATIONS[gameTitle].handleCalculatePlayerRating(player);
       if(isPlayerOnWinningTeam(player.playerTeam, teamScores)){
-        playersRatings[playerName] += GAME_CONFIGURATIONS.generalRatingCalculation.team_win;
+        playerRating += GAME_CONFIGURATIONS.generalRatingCalculation.team_win;
       }
       playersRatings[playerName] += playerRating;
     }
     return playersRatings
   }
-
+  
   const teamScores = calculateTeamScores()
   playersRatings = calculateAllPlayerRatings(teamScores, PLAYER_RATINGS)
 
@@ -113,7 +113,6 @@ exports.parseData = function parseData(data) {
   if (!dataIsValid) {
     return false
   }
-
   return transformData(data)
 }
 
@@ -121,22 +120,25 @@ function transformData(data) {
   const gameTitle = data[0][0];
   const fields = GAME_CONFIGURATIONS[gameTitle].fields
   const numberedFields = GAME_CONFIGURATIONS[gameTitle].numberedFields
-  const playersData = {};
 
-  for (let i = 1; i < data.length; i++) {
-    const player = {};
-    const playerName = data[i][fields.playerName];
+  let unparsedPlayerData
+  let playersData = {}
+  let keyVals
+  let playerData
 
-    for (const fieldIndex of Object.values(fields)) {
-      player[Object.keys(fields)[fieldIndex]] = data[i][fieldIndex];
-    }
-
-    for (const fieldIndex of numberedFields) {
-      const fieldName = Object.keys(fields)[fieldIndex];
-      player[fieldName] = parseInt(player[fieldName], 10);
-    }
-
-    playersData[playerName] = player;
+  for(let i = 1; i < data.length; i++){
+    unparsedPlayerData = data[i]
+    keyVals = unparsedPlayerData.map((val, index) => {
+      if(numberedFields.includes(fields[index])){
+        val = parseInt(val)
+      }
+      return [fields[index], val]
+    })
+    playerData = keyVals.reduce((acc, [key, val]) => {
+      acc[key] = val
+      return acc
+    }, {})
+    playersData[playerData.playerName] = playerData
   }
 
   return { gameTitle, playersData };
@@ -159,14 +161,14 @@ function validateData(data) {
 
     }
     for (let i = 1; i < data.length; i++) {
-      const fields = data[i]
-      const playerName = fields[1]
+      const playerFields = data[i]
+      const playerName = playerFields[1]
       
-      if (fields.length !== Object.keys(GAME_CONFIGURATIONS[gameTitle].fields).length) {
+      if (playerFields.length !== GAME_CONFIGURATIONS[gameTitle].fields.length) {
         console.error("File incorrect, wrong number of fields");
         return false;
       }
-      if (!validateNumberFieldsAreCorrect(gameTitle, fields)) {
+      if (!validateNumberFieldsAreCorrect(gameTitle, playerFields)) {
         console.error("Corrupt file, number fields are incorrect")
         return false
       }
@@ -185,8 +187,9 @@ function validateData(data) {
 }
 
 // Validates the numbered fields in the data
-function validateNumberFieldsAreCorrect(gameTitle, fields) {
-  const requiredFieldIndexes = GAME_CONFIGURATIONS[gameTitle].numberedFields
-  return requiredFieldIndexes.every(index => /^\d+$/.test(fields[index])
-  );
+function validateNumberFieldsAreCorrect(gameTitle, playerFields) {
+  const fields = GAME_CONFIGURATIONS[gameTitle].fields
+  const requiredFieldNames = GAME_CONFIGURATIONS[gameTitle].numberedFields
+  const requiredFieldIndexes = requiredFieldNames.map(requiredFieldName => fields.indexOf(requiredFieldName))
+  return requiredFieldIndexes.every(index => /^\d+$/.test(playerFields[index]));
 }
