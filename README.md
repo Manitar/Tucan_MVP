@@ -54,9 +54,11 @@ fields -> According to the format the CSV lines appear in
 
 numberedFields -> All fields that are supposed to be numbers
 
-handleCalculatePlayerRating -> Handler that calculates player score
+handleCalculatePlayerRating -> Handler that calculates player rating of a certain game
+(not including the 10 points for the team win)
 
-handleIncrementTeamScore -> Handler that returns how much the team score increments by according to the player score
+handleIncrementTeamScore -> Handler that returns how much the team score increments by 
+according to the player score
 ```
 
 **EXAMPLE OF GAME ADDED**
